@@ -21,11 +21,15 @@ const wss = new WebSocket.Server({ server });
 function handleConnection(socket) {
   console.log(socket);
 }
+
+const sockets = [];
+
 wss.on("connection", (socket) => {
+  sockets.push(socket);
   console.log("Connected to Browser");
   socket.on("close", () => console.log("Disconnected from Browser"));
   socket.on("message", (message) => {
-    console.log(message.toString("utf-8"));
+    sockets.forEach((aSocket) => aSocket.send(message.toString("utf-8")));
   });
   socket.send("hello!!!");
 });
